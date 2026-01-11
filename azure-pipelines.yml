@@ -1,0 +1,38 @@
+# Pipeline para Capturas de Pantalla
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest' # CAMBIO CLAVE: Usamos agentes de Microsoft para que sea instantáneo
+
+stages:
+- stage: Build
+  displayName: 'Compilación y Pruebas'
+  jobs:
+  - job: BuildJob
+    steps:
+    - script: |
+        echo "Iniciando simulacion de compilacion..."
+        sleep 2
+        echo "Compilacion finalizada."
+      displayName: 'Compilar Código'
+
+    - script: |
+        echo "Ejecutando tests unitarios..."
+        echo "Test 1: Aprobado"
+        echo "Test 2: Aprobado"
+      displayName: 'Ejecutar Tests'
+
+- stage: Deploy
+  displayName: 'Despliegue a Producción'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: DeployJob
+    steps:
+    - script: |
+        echo "Conectando al entorno..."
+        sleep 2
+        echo "Desplegando versión 1.0..."
+        echo "¡Despliegue exitoso!"
+      displayName: 'Desplegar App'
